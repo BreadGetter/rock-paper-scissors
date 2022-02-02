@@ -1,63 +1,96 @@
 
 
+
+
+
+
 function computerPlay() {
     const options = ["rock", "paper", "scissors"];
-    const computerChoice = options[Math.floor(Math.random() * options.length)];
-    return computerChoice;
-}
+    return options[Math.floor(Math.random() * options.length)];
+};
 
+function capitalize(word) {
+    capWord = word.charAt(0).toUpperCase() + word.slice(1);
+    return capWord;
+};
 
-let playerSelection;
-
-function playRound(e) {
-    let computerSelection = computerPlay();
-    let totalRounds = 0;
-    let playerScore = 0;
-    let computerScore = 0; 
-    if (playerSelection === "rock" && computerSelection === "paper") {
-        computerScore++;
-         console.log("You lose this round! Paper beats rock");
-        
-    } else if (playerSelection === "paper" && computerSelection === "scissors") {
-        computerScore++; 
-         console.log("You lose this round! Scissors beats paper");
-        
-    } else if (playerSelection === "scissors" && computerSelection === "rock") {
-        computerScore++;
-         console.log("You lose this round! Rock beats scissors");
-            
-    } else if (playerSelection === "paper" && computerSelection === "rock") {
-        playerScore++;
-         console.log("You win this round! Paper beats rock");
-        
-    } else if (playerSelection === "scissors" && computerSelection === "paper") {
-        playerScore++;
-         console.log("You win this round! Scissors beats paper");
-    
-    } else if (playerSelection === "rock" && computerSelection === "scissors") {
-        playerScore++;
-         console.log("You win this round! Rock beats scissors");
-
-    } else if (playerSelection === computerSelection) {
-        totalRounds--;
-         console.log("It's a tie!");
-    };
-
+function disableButtons() {
+    buttons.forEach(elem => {
+        elem.disabled = true
+    })
 };
 
 
-
-
-
+                                
 
 const buttons = document.querySelectorAll("button");
 
+const winOrLoss = document.querySelector("#winOrLoss");
+const matchupResult = document.querySelector("#matchupResult");
+const currentScore = document.querySelector("#currentScore")
+const finalResult = document.querySelector("#finalResult");
+
+let playerScore = 0;
+let computerScore = 0;
+
+
+function playRound(playerSelection) {
+    let computerSelection = computerPlay();
+
+
+    if (
+    (playerSelection === "paper" && computerSelection === "rock") ||
+    (playerSelection === "scissors" && computerSelection === "paper") ||
+    (playerSelection === "rock" && computerSelection === "scissors")) {
+
+        winOrLoss.textContent = "You win!";
+        matchupResult.textContent = capitalize(playerSelection) + ` beats ${computerSelection}!`;
+        playerScore += 1;
+        currentScore.textContent = `Player score: ${playerScore} Computer score: ${computerScore}`;
+        
+        if (playerScore === 5) {
+            finalResult.textContent = "You win! Reload the page to play again."
+            disableButtons();
+        }
+
+    }
+
+    else if (
+    (playerSelection === "rock" && computerSelection === "paper") ||
+    (playerSelection === "paper" && computerSelection === "scissors") ||
+    (playerSelection === "scissors" && computerSelection === "rock")) {
+        
+        winOrLoss.textContent = "You lose!";
+        matchupResult.textContent = capitalize(computerSelection) + ` beats ${playerSelection}!`;
+        computerScore += 1; 
+        currentScore.textContent = `Player score: ${playerScore} Computer score: ${computerScore}`;
+        
+        if (computerScore === 5) {
+            finalResult.textContent = "You lose! Reload the page to play again."
+            disableButtons();
+        }
+
+    }
+    else if ((playerSelection === computerSelection)) {
+        winOrLoss.textContent = "It's a tie!";
+        matchupResult.textContent = " ";
+        currentScore.textContent = `Player score: ${playerScore} Computer score: ${computerScore}`;
+    }
+
+
+
+    
+    
+};
+
+
 buttons.forEach((button) => {
     button.addEventListener("click", () => {
-    playerSelection = button.id;
-    playRound();
+        playRound(button.id);
     });
 });
+
+
 
 
 
